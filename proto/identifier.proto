@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package identifier;
+
+option go_package = "./gen";
+
+import "google/protobuf/empty.proto";
+
+service Identity {
+  rpc Get(IdentifierRequest) returns (IdentifierResponse);
+  rpc Create(google.protobuf.Empty) returns (IdentifierResponse);
+}
+
+message IdentifierRequest {
+  string id = 1;
+}
+
+message IdentifierResponse {
+  string id = 1;
+  string slug = 2;
+}
