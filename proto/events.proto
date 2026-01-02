@@ -1,26 +1,39 @@
 syntax = "proto3";
 
-package events;
+package slug;
 
 option go_package = "./gen";
 
-import "google/protobuf/empty.proto";
-
 service EventService {
-  rpc Subscribe(google.protobuf.Empty) returns (stream Event);
+  rpc Subscribe(stream Client) returns (stream Controller);
 }
 
 enum EventType {
-  SLUG_CHANGE        = 0;
+  AUTHENTICATION    = 0;
+  SLUG_CHANGE        = 1;
+  SLUG_CHANGE_RESPONSE        = 2;
 }
 
-message Event {
+message Controller {
   EventType type = 1;
-  int64 timestamp_unix_ms = 2;
 
-  oneof data {
-    SlugChangeEvent data_event = 10;
+  oneof payload {
+    SlugChangeEvent slug_event = 11;
   }
+}
+
+message Client {
+  EventType type = 1;
+
+  oneof payload {
+    Authentication auth_event = 10;
+    SlugChangeEventResponse slug_event_response = 11;
+  }
+}
+
+message Authentication {
+  string auth_token = 1;
+  string identity = 2;
 }
 
 message SlugChangeEvent {
@@ -28,3 +41,7 @@ message SlugChangeEvent {
   string new = 2;
 }
 
+message SlugChangeEventResponse {
+  bool success = 1;
+  string message = 2;
+}

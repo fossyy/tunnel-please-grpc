@@ -23,8 +23,9 @@ const (
 
 type ChangeSlugRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Old           string                 `protobuf:"bytes,1,opt,name=old,proto3" json:"old,omitempty"`
-	New           string                 `protobuf:"bytes,2,opt,name=new,proto3" json:"new,omitempty"`
+	Node          string                 `protobuf:"bytes,1,opt,name=node,proto3" json:"node,omitempty"`
+	Old           string                 `protobuf:"bytes,2,opt,name=old,proto3" json:"old,omitempty"`
+	New           string                 `protobuf:"bytes,3,opt,name=new,proto3" json:"new,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -57,6 +58,13 @@ func (x *ChangeSlugRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use ChangeSlugRequest.ProtoReflect.Descriptor instead.
 func (*ChangeSlugRequest) Descriptor() ([]byte, []int) {
 	return file_slug_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *ChangeSlugRequest) GetNode() string {
+	if x != nil {
+		return x.Node
+	}
+	return ""
 }
 
 func (x *ChangeSlugRequest) GetOld() string {
@@ -130,16 +138,17 @@ var File_slug_proto protoreflect.FileDescriptor
 const file_slug_proto_rawDesc = "" +
 	"\n" +
 	"\n" +
-	"slug.proto\x12\x04slug\"7\n" +
-	"\x11ChangeSlugRequest\x12\x10\n" +
-	"\x03old\x18\x01 \x01(\tR\x03old\x12\x10\n" +
-	"\x03new\x18\x02 \x01(\tR\x03new\"H\n" +
+	"slug.proto\x12\x04slug\"K\n" +
+	"\x11ChangeSlugRequest\x12\x12\n" +
+	"\x04node\x18\x01 \x01(\tR\x04node\x12\x10\n" +
+	"\x03old\x18\x02 \x01(\tR\x03old\x12\x10\n" +
+	"\x03new\x18\x03 \x01(\tR\x03new\"H\n" +
 	"\x12ChangeSlugResponse\x12\x18\n" +
 	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
-	"\amessage\x18\x02 \x01(\tR\amessage2G\n" +
-	"\x04Slug\x12?\n" +
+	"\amessage\x18\x02 \x01(\tR\amessage2T\n" +
 	"\n" +
-	"ChangeSlug\x12\x17.slug.ChangeSlugRequest\x1a\x18.slug.ChangeSlugResponseB\aZ\x05./genb\x06proto3"
+	"SlugChange\x12F\n" +
+	"\x11RequestChangeSlug\x12\x17.slug.ChangeSlugRequest\x1a\x18.slug.ChangeSlugResponseB\aZ\x05./genb\x06proto3"
 
 var (
 	file_slug_proto_rawDescOnce sync.Once
@@ -159,8 +168,8 @@ var file_slug_proto_goTypes = []any{
 	(*ChangeSlugResponse)(nil), // 1: slug.ChangeSlugResponse
 }
 var file_slug_proto_depIdxs = []int32{
-	0, // 0: slug.Slug.ChangeSlug:input_type -> slug.ChangeSlugRequest
-	1, // 1: slug.Slug.ChangeSlug:output_type -> slug.ChangeSlugResponse
+	0, // 0: slug.SlugChange.RequestChangeSlug:input_type -> slug.ChangeSlugRequest
+	1, // 1: slug.SlugChange.RequestChangeSlug:output_type -> slug.ChangeSlugResponse
 	1, // [1:2] is the sub-list for method output_type
 	0, // [0:1] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name

@@ -11,7 +11,6 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
-	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -20,14 +19,14 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	EventService_Subscribe_FullMethodName = "/events.EventService/Subscribe"
+	EventService_Subscribe_FullMethodName = "/slug.EventService/Subscribe"
 )
 
 // EventServiceClient is the client API for EventService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type EventServiceClient interface {
-	Subscribe(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (grpc.ServerStreamingClient[Event], error)
+	Subscribe(ctx context.Context, opts ...grpc.CallOption) (grpc.BidiStreamingClient[Client, Controller], error)
 }
 
 type eventServiceClient struct {
@@ -38,30 +37,24 @@ func NewEventServiceClient(cc grpc.ClientConnInterface) EventServiceClient {
 	return &eventServiceClient{cc}
 }
 
-func (c *eventServiceClient) Subscribe(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (grpc.ServerStreamingClient[Event], error) {
+func (c *eventServiceClient) Subscribe(ctx context.Context, opts ...grpc.CallOption) (grpc.BidiStreamingClient[Client, Controller], error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	stream, err := c.cc.NewStream(ctx, &EventService_ServiceDesc.Streams[0], EventService_Subscribe_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &grpc.GenericClientStream[emptypb.Empty, Event]{ClientStream: stream}
-	if err := x.ClientStream.SendMsg(in); err != nil {
-		return nil, err
-	}
-	if err := x.ClientStream.CloseSend(); err != nil {
-		return nil, err
-	}
+	x := &grpc.GenericClientStream[Client, Controller]{ClientStream: stream}
 	return x, nil
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type EventService_SubscribeClient = grpc.ServerStreamingClient[Event]
+type EventService_SubscribeClient = grpc.BidiStreamingClient[Client, Controller]
 
 // EventServiceServer is the server API for EventService service.
 // All implementations must embed UnimplementedEventServiceServer
 // for forward compatibility.
 type EventServiceServer interface {
-	Subscribe(*emptypb.Empty, grpc.ServerStreamingServer[Event]) error
+	Subscribe(grpc.BidiStreamingServer[Client, Controller]) error
 	mustEmbedUnimplementedEventServiceServer()
 }
 
@@ -72,7 +65,7 @@ type EventServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedEventServiceServer struct{}
 
-func (UnimplementedEventServiceServer) Subscribe(*emptypb.Empty, grpc.ServerStreamingServer[Event]) error {
+func (UnimplementedEventServiceServer) Subscribe(grpc.BidiStreamingServer[Client, Controller]) error {
 	return status.Error(codes.Unimplemented, "method Subscribe not implemented")
 }
 func (UnimplementedEventServiceServer) mustEmbedUnimplementedEventServiceServer() {}
@@ -97,21 +90,17 @@ func RegisterEventServiceServer(s grpc.ServiceRegistrar, srv EventServiceServer)
 }
 
 func _EventService_Subscribe_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(emptypb.Empty)
-	if err := stream.RecvMsg(m); err != nil {
-		return err
-	}
-	return srv.(EventServiceServer).Subscribe(m, &grpc.GenericServerStream[emptypb.Empty, Event]{ServerStream: stream})
+	return srv.(EventServiceServer).Subscribe(&grpc.GenericServerStream[Client, Controller]{ServerStream: stream})
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type EventService_SubscribeServer = grpc.ServerStreamingServer[Event]
+type EventService_SubscribeServer = grpc.BidiStreamingServer[Client, Controller]
 
 // EventService_ServiceDesc is the grpc.ServiceDesc for EventService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var EventService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "events.EventService",
+	ServiceName: "slug.EventService",
 	HandlerType: (*EventServiceServer)(nil),
 	Methods:     []grpc.MethodDesc{},
 	Streams: []grpc.StreamDesc{
@@ -119,6 +108,7 @@ var EventService_ServiceDesc = grpc.ServiceDesc{
 			StreamName:    "Subscribe",
 			Handler:       _EventService_Subscribe_Handler,
 			ServerStreams: true,
+			ClientStreams: true,
 		},
 	},
 	Metadata: "events.proto",

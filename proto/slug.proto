@@ -4,13 +4,14 @@ package slug;
 
 option go_package = "./gen";
 
-service Slug {
-  rpc ChangeSlug(ChangeSlugRequest) returns (ChangeSlugResponse);
+service SlugChange {
+  rpc RequestChangeSlug(ChangeSlugRequest) returns (ChangeSlugResponse);
 }
 
 message ChangeSlugRequest {
-  string old = 1;
-  string new = 2;
+  string node = 1;
+  string old = 2;
+  string new = 3;
 }
 
 message ChangeSlugResponse {

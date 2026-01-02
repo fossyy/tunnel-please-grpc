@@ -9,7 +9,6 @@ package gen
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
-	emptypb "google.golang.org/protobuf/types/known/emptypb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -25,16 +24,22 @@ const (
 type EventType int32
 
 const (
-	EventType_SLUG_CHANGE EventType = 0
+	EventType_AUTHENTICATION       EventType = 0
+	EventType_SLUG_CHANGE          EventType = 1
+	EventType_SLUG_CHANGE_RESPONSE EventType = 2
 )
 
 // Enum value maps for EventType.
 var (
 	EventType_name = map[int32]string{
-		0: "SLUG_CHANGE",
+		0: "AUTHENTICATION",
+		1: "SLUG_CHANGE",
+		2: "SLUG_CHANGE_RESPONSE",
 	}
 	EventType_value = map[string]int32{
-		"SLUG_CHANGE": 0,
+		"AUTHENTICATION":       0,
+		"SLUG_CHANGE":          1,
+		"SLUG_CHANGE_RESPONSE": 2,
 	}
 )
 
@@ -65,32 +70,31 @@ func (EventType) EnumDescriptor() ([]byte, []int) {
 	return file_events_proto_rawDescGZIP(), []int{0}
 }
 
-type Event struct {
-	state           protoimpl.MessageState `protogen:"open.v1"`
-	Type            EventType              `protobuf:"varint,1,opt,name=type,proto3,enum=events.EventType" json:"type,omitempty"`
-	TimestampUnixMs int64                  `protobuf:"varint,2,opt,name=timestamp_unix_ms,json=timestampUnixMs,proto3" json:"timestamp_unix_ms,omitempty"`
-	// Types that are valid to be assigned to Data:
+type Controller struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	Type  EventType              `protobuf:"varint,1,opt,name=type,proto3,enum=slug.EventType" json:"type,omitempty"`
+	// Types that are valid to be assigned to Payload:
 	//
-	//	*Event_DataEvent
-	Data          isEvent_Data `protobuf_oneof:"data"`
+	//	*Controller_SlugEvent
+	Payload       isController_Payload `protobuf_oneof:"payload"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *Event) Reset() {
-	*x = Event{}
+func (x *Controller) Reset() {
+	*x = Controller{}
 	mi := &file_events_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *Event) String() string {
+func (x *Controller) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*Event) ProtoMessage() {}
+func (*Controller) ProtoMessage() {}
 
-func (x *Event) ProtoReflect() protoreflect.Message {
+func (x *Controller) ProtoReflect() protoreflect.Message {
 	mi := &file_events_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -102,50 +106,185 @@ func (x *Event) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Event.ProtoReflect.Descriptor instead.
-func (*Event) Descriptor() ([]byte, []int) {
+// Deprecated: Use Controller.ProtoReflect.Descriptor instead.
+func (*Controller) Descriptor() ([]byte, []int) {
 	return file_events_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *Event) GetType() EventType {
+func (x *Controller) GetType() EventType {
 	if x != nil {
 		return x.Type
 	}
-	return EventType_SLUG_CHANGE
+	return EventType_AUTHENTICATION
 }
 
-func (x *Event) GetTimestampUnixMs() int64 {
+func (x *Controller) GetPayload() isController_Payload {
 	if x != nil {
-		return x.TimestampUnixMs
-	}
-	return 0
-}
-
-func (x *Event) GetData() isEvent_Data {
-	if x != nil {
-		return x.Data
+		return x.Payload
 	}
 	return nil
 }
 
-func (x *Event) GetDataEvent() *SlugChangeEvent {
+func (x *Controller) GetSlugEvent() *SlugChangeEvent {
 	if x != nil {
-		if x, ok := x.Data.(*Event_DataEvent); ok {
-			return x.DataEvent
+		if x, ok := x.Payload.(*Controller_SlugEvent); ok {
+			return x.SlugEvent
 		}
 	}
 	return nil
 }
 
-type isEvent_Data interface {
-	isEvent_Data()
+type isController_Payload interface {
+	isController_Payload()
 }
 
-type Event_DataEvent struct {
-	DataEvent *SlugChangeEvent `protobuf:"bytes,10,opt,name=data_event,json=dataEvent,proto3,oneof"`
+type Controller_SlugEvent struct {
+	SlugEvent *SlugChangeEvent `protobuf:"bytes,11,opt,name=slug_event,json=slugEvent,proto3,oneof"`
 }
 
-func (*Event_DataEvent) isEvent_Data() {}
+func (*Controller_SlugEvent) isController_Payload() {}
+
+type Client struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	Type  EventType              `protobuf:"varint,1,opt,name=type,proto3,enum=slug.EventType" json:"type,omitempty"`
+	// Types that are valid to be assigned to Payload:
+	//
+	//	*Client_AuthEvent
+	//	*Client_SlugEventResponse
+	Payload       isClient_Payload `protobuf_oneof:"payload"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Client) Reset() {
+	*x = Client{}
+	mi := &file_events_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Client) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Client) ProtoMessage() {}
+
+func (x *Client) ProtoReflect() protoreflect.Message {
+	mi := &file_events_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Client.ProtoReflect.Descriptor instead.
+func (*Client) Descriptor() ([]byte, []int) {
+	return file_events_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *Client) GetType() EventType {
+	if x != nil {
+		return x.Type
+	}
+	return EventType_AUTHENTICATION
+}
+
+func (x *Client) GetPayload() isClient_Payload {
+	if x != nil {
+		return x.Payload
+	}
+	return nil
+}
+
+func (x *Client) GetAuthEvent() *Authentication {
+	if x != nil {
+		if x, ok := x.Payload.(*Client_AuthEvent); ok {
+			return x.AuthEvent
+		}
+	}
+	return nil
+}
+
+func (x *Client) GetSlugEventResponse() *SlugChangeEventResponse {
+	if x != nil {
+		if x, ok := x.Payload.(*Client_SlugEventResponse); ok {
+			return x.SlugEventResponse
+		}
+	}
+	return nil
+}
+
+type isClient_Payload interface {
+	isClient_Payload()
+}
+
+type Client_AuthEvent struct {
+	AuthEvent *Authentication `protobuf:"bytes,10,opt,name=auth_event,json=authEvent,proto3,oneof"`
+}
+
+type Client_SlugEventResponse struct {
+	SlugEventResponse *SlugChangeEventResponse `protobuf:"bytes,11,opt,name=slug_event_response,json=slugEventResponse,proto3,oneof"`
+}
+
+func (*Client_AuthEvent) isClient_Payload() {}
+
+func (*Client_SlugEventResponse) isClient_Payload() {}
+
+type Authentication struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	AuthToken     string                 `protobuf:"bytes,1,opt,name=auth_token,json=authToken,proto3" json:"auth_token,omitempty"`
+	Identity      string                 `protobuf:"bytes,2,opt,name=identity,proto3" json:"identity,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Authentication) Reset() {
+	*x = Authentication{}
+	mi := &file_events_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Authentication) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Authentication) ProtoMessage() {}
+
+func (x *Authentication) ProtoReflect() protoreflect.Message {
+	mi := &file_events_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Authentication.ProtoReflect.Descriptor instead.
+func (*Authentication) Descriptor() ([]byte, []int) {
+	return file_events_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *Authentication) GetAuthToken() string {
+	if x != nil {
+		return x.AuthToken
+	}
+	return ""
+}
+
+func (x *Authentication) GetIdentity() string {
+	if x != nil {
+		return x.Identity
+	}
+	return ""
+}
 
 type SlugChangeEvent struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -157,7 +296,7 @@ type SlugChangeEvent struct {
 
 func (x *SlugChangeEvent) Reset() {
 	*x = SlugChangeEvent{}
-	mi := &file_events_proto_msgTypes[1]
+	mi := &file_events_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -169,7 +308,7 @@ func (x *SlugChangeEvent) String() string {
 func (*SlugChangeEvent) ProtoMessage() {}
 
 func (x *SlugChangeEvent) ProtoReflect() protoreflect.Message {
-	mi := &file_events_proto_msgTypes[1]
+	mi := &file_events_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -182,7 +321,7 @@ func (x *SlugChangeEvent) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SlugChangeEvent.ProtoReflect.Descriptor instead.
 func (*SlugChangeEvent) Descriptor() ([]byte, []int) {
-	return file_events_proto_rawDescGZIP(), []int{1}
+	return file_events_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *SlugChangeEvent) GetOld() string {
@@ -199,25 +338,92 @@ func (x *SlugChangeEvent) GetNew() string {
 	return ""
 }
 
+type SlugChangeEventResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SlugChangeEventResponse) Reset() {
+	*x = SlugChangeEventResponse{}
+	mi := &file_events_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SlugChangeEventResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SlugChangeEventResponse) ProtoMessage() {}
+
+func (x *SlugChangeEventResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_events_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SlugChangeEventResponse.ProtoReflect.Descriptor instead.
+func (*SlugChangeEventResponse) Descriptor() ([]byte, []int) {
+	return file_events_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *SlugChangeEventResponse) GetSuccess() bool {
+	if x != nil {
+		return x.Success
+	}
+	return false
+}
+
+func (x *SlugChangeEventResponse) GetMessage() string {
+	if x != nil {
+		return x.Message
+	}
+	return ""
+}
+
 var File_events_proto protoreflect.FileDescriptor
 
 const file_events_proto_rawDesc = "" +
 	"\n" +
-	"\fevents.proto\x12\x06events\x1a\x1bgoogle/protobuf/empty.proto\"\x9c\x01\n" +
-	"\x05Event\x12%\n" +
-	"\x04type\x18\x01 \x01(\x0e2\x11.events.EventTypeR\x04type\x12*\n" +
-	"\x11timestamp_unix_ms\x18\x02 \x01(\x03R\x0ftimestampUnixMs\x128\n" +
+	"\fevents.proto\x12\x04slug\"t\n" +
 	"\n" +
-	"data_event\x18\n" +
-	" \x01(\v2\x17.events.SlugChangeEventH\x00R\tdataEventB\x06\n" +
-	"\x04data\"5\n" +
+	"Controller\x12#\n" +
+	"\x04type\x18\x01 \x01(\x0e2\x0f.slug.EventTypeR\x04type\x126\n" +
+	"\n" +
+	"slug_event\x18\v \x01(\v2\x15.slug.SlugChangeEventH\x00R\tslugEventB\t\n" +
+	"\apayload\"\xc0\x01\n" +
+	"\x06Client\x12#\n" +
+	"\x04type\x18\x01 \x01(\x0e2\x0f.slug.EventTypeR\x04type\x125\n" +
+	"\n" +
+	"auth_event\x18\n" +
+	" \x01(\v2\x14.slug.AuthenticationH\x00R\tauthEvent\x12O\n" +
+	"\x13slug_event_response\x18\v \x01(\v2\x1d.slug.SlugChangeEventResponseH\x00R\x11slugEventResponseB\t\n" +
+	"\apayload\"K\n" +
+	"\x0eAuthentication\x12\x1d\n" +
+	"\n" +
+	"auth_token\x18\x01 \x01(\tR\tauthToken\x12\x1a\n" +
+	"\bidentity\x18\x02 \x01(\tR\bidentity\"5\n" +
 	"\x0fSlugChangeEvent\x12\x10\n" +
 	"\x03old\x18\x01 \x01(\tR\x03old\x12\x10\n" +
-	"\x03new\x18\x02 \x01(\tR\x03new*\x1c\n" +
-	"\tEventType\x12\x0f\n" +
-	"\vSLUG_CHANGE\x10\x002D\n" +
-	"\fEventService\x124\n" +
-	"\tSubscribe\x12\x16.google.protobuf.Empty\x1a\r.events.Event0\x01B\aZ\x05./genb\x06proto3"
+	"\x03new\x18\x02 \x01(\tR\x03new\"M\n" +
+	"\x17SlugChangeEventResponse\x12\x18\n" +
+	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
+	"\amessage\x18\x02 \x01(\tR\amessage*J\n" +
+	"\tEventType\x12\x12\n" +
+	"\x0eAUTHENTICATION\x10\x00\x12\x0f\n" +
+	"\vSLUG_CHANGE\x10\x01\x12\x18\n" +
+	"\x14SLUG_CHANGE_RESPONSE\x10\x022?\n" +
+	"\fEventService\x12/\n" +
+	"\tSubscribe\x12\f.slug.Client\x1a\x10.slug.Controller(\x010\x01B\aZ\x05./genb\x06proto3"
 
 var (
 	file_events_proto_rawDescOnce sync.Once
@@ -232,23 +438,28 @@ func file_events_proto_rawDescGZIP() []byte {
 }
 
 var file_events_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_events_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_events_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_events_proto_goTypes = []any{
-	(EventType)(0),          // 0: events.EventType
-	(*Event)(nil),           // 1: events.Event
-	(*SlugChangeEvent)(nil), // 2: events.SlugChangeEvent
-	(*emptypb.Empty)(nil),   // 3: google.protobuf.Empty
+	(EventType)(0),                  // 0: slug.EventType
+	(*Controller)(nil),              // 1: slug.Controller
+	(*Client)(nil),                  // 2: slug.Client
+	(*Authentication)(nil),          // 3: slug.Authentication
+	(*SlugChangeEvent)(nil),         // 4: slug.SlugChangeEvent
+	(*SlugChangeEventResponse)(nil), // 5: slug.SlugChangeEventResponse
 }
 var file_events_proto_depIdxs = []int32{
-	0, // 0: events.Event.type:type_name -> events.EventType
-	2, // 1: events.Event.data_event:type_name -> events.SlugChangeEvent
-	3, // 2: events.EventService.Subscribe:input_type -> google.protobuf.Empty
-	1, // 3: events.EventService.Subscribe:output_type -> events.Event
-	3, // [3:4] is the sub-list for method output_type
-	2, // [2:3] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+	0, // 0: slug.Controller.type:type_name -> slug.EventType
+	4, // 1: slug.Controller.slug_event:type_name -> slug.SlugChangeEvent
+	0, // 2: slug.Client.type:type_name -> slug.EventType
+	3, // 3: slug.Client.auth_event:type_name -> slug.Authentication
+	5, // 4: slug.Client.slug_event_response:type_name -> slug.SlugChangeEventResponse
+	2, // 5: slug.EventService.Subscribe:input_type -> slug.Client
+	1, // 6: slug.EventService.Subscribe:output_type -> slug.Controller
+	6, // [6:7] is the sub-list for method output_type
+	5, // [5:6] is the sub-list for method input_type
+	5, // [5:5] is the sub-list for extension type_name
+	5, // [5:5] is the sub-list for extension extendee
+	0, // [0:5] is the sub-list for field type_name
 }
 
 func init() { file_events_proto_init() }
@@ -257,7 +468,11 @@ func file_events_proto_init() {
 		return
 	}
 	file_events_proto_msgTypes[0].OneofWrappers = []any{
-		(*Event_DataEvent)(nil),
+		(*Controller_SlugEvent)(nil),
+	}
+	file_events_proto_msgTypes[1].OneofWrappers = []any{
+		(*Client_AuthEvent)(nil),
+		(*Client_SlugEventResponse)(nil),
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -265,7 +480,7 @@ func file_events_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_events_proto_rawDesc), len(file_events_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   2,
+			NumMessages:   5,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

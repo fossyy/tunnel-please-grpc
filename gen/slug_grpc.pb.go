@@ -19,101 +19,101 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Slug_ChangeSlug_FullMethodName = "/slug.Slug/ChangeSlug"
+	SlugChange_RequestChangeSlug_FullMethodName = "/slug.SlugChange/RequestChangeSlug"
 )
 
-// SlugClient is the client API for Slug service.
+// SlugChangeClient is the client API for SlugChange service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type SlugClient interface {
-	ChangeSlug(ctx context.Context, in *ChangeSlugRequest, opts ...grpc.CallOption) (*ChangeSlugResponse, error)
+type SlugChangeClient interface {
+	RequestChangeSlug(ctx context.Context, in *ChangeSlugRequest, opts ...grpc.CallOption) (*ChangeSlugResponse, error)
 }
 
-type slugClient struct {
+type slugChangeClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewSlugClient(cc grpc.ClientConnInterface) SlugClient {
-	return &slugClient{cc}
+func NewSlugChangeClient(cc grpc.ClientConnInterface) SlugChangeClient {
+	return &slugChangeClient{cc}
 }
 
-func (c *slugClient) ChangeSlug(ctx context.Context, in *ChangeSlugRequest, opts ...grpc.CallOption) (*ChangeSlugResponse, error) {
+func (c *slugChangeClient) RequestChangeSlug(ctx context.Context, in *ChangeSlugRequest, opts ...grpc.CallOption) (*ChangeSlugResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ChangeSlugResponse)
-	err := c.cc.Invoke(ctx, Slug_ChangeSlug_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, SlugChange_RequestChangeSlug_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// SlugServer is the server API for Slug service.
-// All implementations must embed UnimplementedSlugServer
+// SlugChangeServer is the server API for SlugChange service.
+// All implementations must embed UnimplementedSlugChangeServer
 // for forward compatibility.
-type SlugServer interface {
-	ChangeSlug(context.Context, *ChangeSlugRequest) (*ChangeSlugResponse, error)
-	mustEmbedUnimplementedSlugServer()
+type SlugChangeServer interface {
+	RequestChangeSlug(context.Context, *ChangeSlugRequest) (*ChangeSlugResponse, error)
+	mustEmbedUnimplementedSlugChangeServer()
 }
 
-// UnimplementedSlugServer must be embedded to have
+// UnimplementedSlugChangeServer must be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
 // pointer dereference when methods are called.
-type UnimplementedSlugServer struct{}
+type UnimplementedSlugChangeServer struct{}
 
-func (UnimplementedSlugServer) ChangeSlug(context.Context, *ChangeSlugRequest) (*ChangeSlugResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method ChangeSlug not implemented")
+func (UnimplementedSlugChangeServer) RequestChangeSlug(context.Context, *ChangeSlugRequest) (*ChangeSlugResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method RequestChangeSlug not implemented")
 }
-func (UnimplementedSlugServer) mustEmbedUnimplementedSlugServer() {}
-func (UnimplementedSlugServer) testEmbeddedByValue()              {}
+func (UnimplementedSlugChangeServer) mustEmbedUnimplementedSlugChangeServer() {}
+func (UnimplementedSlugChangeServer) testEmbeddedByValue()                    {}
 
-// UnsafeSlugServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to SlugServer will
+// UnsafeSlugChangeServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to SlugChangeServer will
 // result in compilation errors.
-type UnsafeSlugServer interface {
-	mustEmbedUnimplementedSlugServer()
+type UnsafeSlugChangeServer interface {
+	mustEmbedUnimplementedSlugChangeServer()
 }
 
-func RegisterSlugServer(s grpc.ServiceRegistrar, srv SlugServer) {
-	// If the following call panics, it indicates UnimplementedSlugServer was
+func RegisterSlugChangeServer(s grpc.ServiceRegistrar, srv SlugChangeServer) {
+	// If the following call panics, it indicates UnimplementedSlugChangeServer was
 	// embedded by pointer and is nil.  This will cause panics if an
 	// unimplemented method is ever invoked, so we test this at initialization
 	// time to prevent it from happening at runtime later due to I/O.
 	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
 		t.testEmbeddedByValue()
 	}
-	s.RegisterService(&Slug_ServiceDesc, srv)
+	s.RegisterService(&SlugChange_ServiceDesc, srv)
 }
 
-func _Slug_ChangeSlug_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _SlugChange_RequestChangeSlug_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ChangeSlugRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(SlugServer).ChangeSlug(ctx, in)
+		return srv.(SlugChangeServer).RequestChangeSlug(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Slug_ChangeSlug_FullMethodName,
+		FullMethod: SlugChange_RequestChangeSlug_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(SlugServer).ChangeSlug(ctx, req.(*ChangeSlugRequest))
+		return srv.(SlugChangeServer).RequestChangeSlug(ctx, req.(*ChangeSlugRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// Slug_ServiceDesc is the grpc.ServiceDesc for Slug service.
+// SlugChange_ServiceDesc is the grpc.ServiceDesc for SlugChange service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var Slug_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "slug.Slug",
-	HandlerType: (*SlugServer)(nil),
+var SlugChange_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "slug.SlugChange",
+	HandlerType: (*SlugChangeServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "ChangeSlug",
-			Handler:    _Slug_ChangeSlug_Handler,
+			MethodName: "RequestChangeSlug",
+			Handler:    _SlugChange_RequestChangeSlug_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
