@@ -27,6 +27,7 @@ const (
 	EventType_AUTHENTICATION       EventType = 0
 	EventType_SLUG_CHANGE          EventType = 1
 	EventType_SLUG_CHANGE_RESPONSE EventType = 2
+	EventType_GET_SESSIONS         EventType = 3
 )
 
 // Enum value maps for EventType.
@@ -35,11 +36,13 @@ var (
 		0: "AUTHENTICATION",
 		1: "SLUG_CHANGE",
 		2: "SLUG_CHANGE_RESPONSE",
+		3: "GET_SESSIONS",
 	}
 	EventType_value = map[string]int32{
 		"AUTHENTICATION":       0,
 		"SLUG_CHANGE":          1,
 		"SLUG_CHANGE_RESPONSE": 2,
+		"GET_SESSIONS":         3,
 	}
 )
 
@@ -76,6 +79,7 @@ type Controller struct {
 	// Types that are valid to be assigned to Payload:
 	//
 	//	*Controller_SlugEvent
+	//	*Controller_GetSessionsEvent
 	Payload       isController_Payload `protobuf_oneof:"payload"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -134,6 +138,15 @@ func (x *Controller) GetSlugEvent() *SlugChangeEvent {
 	return nil
 }
 
+func (x *Controller) GetGetSessionsEvent() *GetSessionsEvent {
+	if x != nil {
+		if x, ok := x.Payload.(*Controller_GetSessionsEvent); ok {
+			return x.GetSessionsEvent
+		}
+	}
+	return nil
+}
+
 type isController_Payload interface {
 	isController_Payload()
 }
@@ -142,7 +155,13 @@ type Controller_SlugEvent struct {
 	SlugEvent *SlugChangeEvent `protobuf:"bytes,11,opt,name=slug_event,json=slugEvent,proto3,oneof"`
 }
 
+type Controller_GetSessionsEvent struct {
+	GetSessionsEvent *GetSessionsEvent `protobuf:"bytes,12,opt,name=get_sessions_event,json=getSessionsEvent,proto3,oneof"`
+}
+
 func (*Controller_SlugEvent) isController_Payload() {}
+
+func (*Controller_GetSessionsEvent) isController_Payload() {}
 
 type Client struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -151,6 +170,7 @@ type Client struct {
 	//
 	//	*Client_AuthEvent
 	//	*Client_SlugEventResponse
+	//	*Client_GetSessionsEvent
 	Payload       isClient_Payload `protobuf_oneof:"payload"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -218,6 +238,15 @@ func (x *Client) GetSlugEventResponse() *SlugChangeEventResponse {
 	return nil
 }
 
+func (x *Client) GetGetSessionsEvent() *GetSessionsResponse {
+	if x != nil {
+		if x, ok := x.Payload.(*Client_GetSessionsEvent); ok {
+			return x.GetSessionsEvent
+		}
+	}
+	return nil
+}
+
 type isClient_Payload interface {
 	isClient_Payload()
 }
@@ -230,9 +259,15 @@ type Client_SlugEventResponse struct {
 	SlugEventResponse *SlugChangeEventResponse `protobuf:"bytes,11,opt,name=slug_event_response,json=slugEventResponse,proto3,oneof"`
 }
 
+type Client_GetSessionsEvent struct {
+	GetSessionsEvent *GetSessionsResponse `protobuf:"bytes,12,opt,name=get_sessions_event,json=getSessionsEvent,proto3,oneof"`
+}
+
 func (*Client_AuthEvent) isClient_Payload() {}
 
 func (*Client_SlugEventResponse) isClient_Payload() {}
+
+func (*Client_GetSessionsEvent) isClient_Payload() {}
 
 type Authentication struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -390,23 +425,70 @@ func (x *SlugChangeEventResponse) GetMessage() string {
 	return ""
 }
 
+type GetSessionsEvent struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Identity      string                 `protobuf:"bytes,1,opt,name=identity,proto3" json:"identity,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetSessionsEvent) Reset() {
+	*x = GetSessionsEvent{}
+	mi := &file_events_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetSessionsEvent) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetSessionsEvent) ProtoMessage() {}
+
+func (x *GetSessionsEvent) ProtoReflect() protoreflect.Message {
+	mi := &file_events_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetSessionsEvent.ProtoReflect.Descriptor instead.
+func (*GetSessionsEvent) Descriptor() ([]byte, []int) {
+	return file_events_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *GetSessionsEvent) GetIdentity() string {
+	if x != nil {
+		return x.Identity
+	}
+	return ""
+}
+
 var File_events_proto protoreflect.FileDescriptor
 
 const file_events_proto_rawDesc = "" +
 	"\n" +
-	"\fevents.proto\x12\x04slug\"t\n" +
+	"\fevents.proto\x12\x04slug\x1a\n" +
+	"user.proto\"\xbc\x01\n" +
 	"\n" +
 	"Controller\x12#\n" +
 	"\x04type\x18\x01 \x01(\x0e2\x0f.slug.EventTypeR\x04type\x126\n" +
 	"\n" +
-	"slug_event\x18\v \x01(\v2\x15.slug.SlugChangeEventH\x00R\tslugEventB\t\n" +
-	"\apayload\"\xc0\x01\n" +
+	"slug_event\x18\v \x01(\v2\x15.slug.SlugChangeEventH\x00R\tslugEvent\x12F\n" +
+	"\x12get_sessions_event\x18\f \x01(\v2\x16.slug.GetSessionsEventH\x00R\x10getSessionsEventB\t\n" +
+	"\apayload\"\x8b\x02\n" +
 	"\x06Client\x12#\n" +
 	"\x04type\x18\x01 \x01(\x0e2\x0f.slug.EventTypeR\x04type\x125\n" +
 	"\n" +
 	"auth_event\x18\n" +
 	" \x01(\v2\x14.slug.AuthenticationH\x00R\tauthEvent\x12O\n" +
-	"\x13slug_event_response\x18\v \x01(\v2\x1d.slug.SlugChangeEventResponseH\x00R\x11slugEventResponseB\t\n" +
+	"\x13slug_event_response\x18\v \x01(\v2\x1d.slug.SlugChangeEventResponseH\x00R\x11slugEventResponse\x12I\n" +
+	"\x12get_sessions_event\x18\f \x01(\v2\x19.slug.GetSessionsResponseH\x00R\x10getSessionsEventB\t\n" +
 	"\apayload\"K\n" +
 	"\x0eAuthentication\x12\x1d\n" +
 	"\n" +
@@ -417,11 +499,14 @@ const file_events_proto_rawDesc = "" +
 	"\x03new\x18\x02 \x01(\tR\x03new\"M\n" +
 	"\x17SlugChangeEventResponse\x12\x18\n" +
 	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
-	"\amessage\x18\x02 \x01(\tR\amessage*J\n" +
+	"\amessage\x18\x02 \x01(\tR\amessage\".\n" +
+	"\x10GetSessionsEvent\x12\x1a\n" +
+	"\bidentity\x18\x01 \x01(\tR\bidentity*\\\n" +
 	"\tEventType\x12\x12\n" +
 	"\x0eAUTHENTICATION\x10\x00\x12\x0f\n" +
 	"\vSLUG_CHANGE\x10\x01\x12\x18\n" +
-	"\x14SLUG_CHANGE_RESPONSE\x10\x022?\n" +
+	"\x14SLUG_CHANGE_RESPONSE\x10\x02\x12\x10\n" +
+	"\fGET_SESSIONS\x10\x032?\n" +
 	"\fEventService\x12/\n" +
 	"\tSubscribe\x12\f.slug.Client\x1a\x10.slug.Controller(\x010\x01B\aZ\x05./genb\x06proto3"
 
@@ -438,7 +523,7 @@ func file_events_proto_rawDescGZIP() []byte {
 }
 
 var file_events_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_events_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_events_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_events_proto_goTypes = []any{
 	(EventType)(0),                  // 0: slug.EventType
 	(*Controller)(nil),              // 1: slug.Controller
@@ -446,20 +531,24 @@ var file_events_proto_goTypes = []any{
 	(*Authentication)(nil),          // 3: slug.Authentication
 	(*SlugChangeEvent)(nil),         // 4: slug.SlugChangeEvent
 	(*SlugChangeEventResponse)(nil), // 5: slug.SlugChangeEventResponse
+	(*GetSessionsEvent)(nil),        // 6: slug.GetSessionsEvent
+	(*GetSessionsResponse)(nil),     // 7: slug.GetSessionsResponse
 }
 var file_events_proto_depIdxs = []int32{
 	0, // 0: slug.Controller.type:type_name -> slug.EventType
 	4, // 1: slug.Controller.slug_event:type_name -> slug.SlugChangeEvent
-	0, // 2: slug.Client.type:type_name -> slug.EventType
-	3, // 3: slug.Client.auth_event:type_name -> slug.Authentication
-	5, // 4: slug.Client.slug_event_response:type_name -> slug.SlugChangeEventResponse
-	2, // 5: slug.EventService.Subscribe:input_type -> slug.Client
-	1, // 6: slug.EventService.Subscribe:output_type -> slug.Controller
-	6, // [6:7] is the sub-list for method output_type
-	5, // [5:6] is the sub-list for method input_type
-	5, // [5:5] is the sub-list for extension type_name
-	5, // [5:5] is the sub-list for extension extendee
-	0, // [0:5] is the sub-list for field type_name
+	6, // 2: slug.Controller.get_sessions_event:type_name -> slug.GetSessionsEvent
+	0, // 3: slug.Client.type:type_name -> slug.EventType
+	3, // 4: slug.Client.auth_event:type_name -> slug.Authentication
+	5, // 5: slug.Client.slug_event_response:type_name -> slug.SlugChangeEventResponse
+	7, // 6: slug.Client.get_sessions_event:type_name -> slug.GetSessionsResponse
+	2, // 7: slug.EventService.Subscribe:input_type -> slug.Client
+	1, // 8: slug.EventService.Subscribe:output_type -> slug.Controller
+	8, // [8:9] is the sub-list for method output_type
+	7, // [7:8] is the sub-list for method input_type
+	7, // [7:7] is the sub-list for extension type_name
+	7, // [7:7] is the sub-list for extension extendee
+	0, // [0:7] is the sub-list for field type_name
 }
 
 func init() { file_events_proto_init() }
@@ -467,12 +556,15 @@ func file_events_proto_init() {
 	if File_events_proto != nil {
 		return
 	}
+	file_user_proto_init()
 	file_events_proto_msgTypes[0].OneofWrappers = []any{
 		(*Controller_SlugEvent)(nil),
+		(*Controller_GetSessionsEvent)(nil),
 	}
 	file_events_proto_msgTypes[1].OneofWrappers = []any{
 		(*Client_AuthEvent)(nil),
 		(*Client_SlugEventResponse)(nil),
+		(*Client_GetSessionsEvent)(nil),
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -480,7 +572,7 @@ func file_events_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_events_proto_rawDesc), len(file_events_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   5,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

@@ -3,7 +3,7 @@ syntax = "proto3";
 package slug;
 
 option go_package = "./gen";
-
+import "user.proto";
 service EventService {
   rpc Subscribe(stream Client) returns (stream Controller);
 }
@@ -12,6 +12,7 @@ enum EventType {
   AUTHENTICATION    = 0;
   SLUG_CHANGE        = 1;
   SLUG_CHANGE_RESPONSE        = 2;
+  GET_SESSIONS = 3;
 }
 
 message Controller {
@@ -19,6 +20,7 @@ message Controller {
 
   oneof payload {
     SlugChangeEvent slug_event = 11;
+    GetSessionsEvent get_sessions_event = 12;
   }
 }
 
@@ -28,6 +30,7 @@ message Client {
   oneof payload {
     Authentication auth_event = 10;
     SlugChangeEventResponse slug_event_response = 11;
+    GetSessionsResponse get_sessions_event = 12;
   }
 }
 
@@ -44,4 +47,8 @@ message SlugChangeEvent {
 message SlugChangeEventResponse {
   bool success = 1;
   string message = 2;
+}
+
+message GetSessionsEvent {
+  string identity = 1;
 }
