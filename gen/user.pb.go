@@ -9,7 +9,6 @@ package gen
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
-	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -114,7 +113,8 @@ func (x *CheckRequest) GetAuthToken() string {
 
 type CheckResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Response      AuthorizationResponse  `protobuf:"varint,1,opt,name=response,proto3,enum=slug.AuthorizationResponse" json:"response,omitempty"`
+	Response      AuthorizationResponse  `protobuf:"varint,1,opt,name=response,proto3,enum=user.AuthorizationResponse" json:"response,omitempty"`
+	User          string                 `protobuf:"bytes,2,opt,name=user,proto3" json:"user,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -156,168 +156,11 @@ func (x *CheckResponse) GetResponse() AuthorizationResponse {
 	return AuthorizationResponse_MESSAGE_TYPE_AUTHORIZED
 }
 
-type GetSessionRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Identity      string                 `protobuf:"bytes,1,opt,name=identity,proto3" json:"identity,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *GetSessionRequest) Reset() {
-	*x = GetSessionRequest{}
-	mi := &file_user_proto_msgTypes[2]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GetSessionRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GetSessionRequest) ProtoMessage() {}
-
-func (x *GetSessionRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_proto_msgTypes[2]
+func (x *CheckResponse) GetUser() string {
 	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GetSessionRequest.ProtoReflect.Descriptor instead.
-func (*GetSessionRequest) Descriptor() ([]byte, []int) {
-	return file_user_proto_rawDescGZIP(), []int{2}
-}
-
-func (x *GetSessionRequest) GetIdentity() string {
-	if x != nil {
-		return x.Identity
+		return x.User
 	}
 	return ""
-}
-
-type GetSessionsResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Details       []*Detail              `protobuf:"bytes,1,rep,name=details,proto3" json:"details,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *GetSessionsResponse) Reset() {
-	*x = GetSessionsResponse{}
-	mi := &file_user_proto_msgTypes[3]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GetSessionsResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GetSessionsResponse) ProtoMessage() {}
-
-func (x *GetSessionsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_user_proto_msgTypes[3]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GetSessionsResponse.ProtoReflect.Descriptor instead.
-func (*GetSessionsResponse) Descriptor() ([]byte, []int) {
-	return file_user_proto_rawDescGZIP(), []int{3}
-}
-
-func (x *GetSessionsResponse) GetDetails() []*Detail {
-	if x != nil {
-		return x.Details
-	}
-	return nil
-}
-
-type Detail struct {
-	state          protoimpl.MessageState `protogen:"open.v1"`
-	ForwardingType string                 `protobuf:"bytes,1,opt,name=forwarding_type,json=forwardingType,proto3" json:"forwarding_type,omitempty"`
-	Slug           string                 `protobuf:"bytes,2,opt,name=slug,proto3" json:"slug,omitempty"`
-	UserId         string                 `protobuf:"bytes,3,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	Active         bool                   `protobuf:"varint,4,opt,name=active,proto3" json:"active,omitempty"`
-	StartedAt      *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=started_at,json=startedAt,proto3" json:"started_at,omitempty"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
-}
-
-func (x *Detail) Reset() {
-	*x = Detail{}
-	mi := &file_user_proto_msgTypes[4]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *Detail) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*Detail) ProtoMessage() {}
-
-func (x *Detail) ProtoReflect() protoreflect.Message {
-	mi := &file_user_proto_msgTypes[4]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use Detail.ProtoReflect.Descriptor instead.
-func (*Detail) Descriptor() ([]byte, []int) {
-	return file_user_proto_rawDescGZIP(), []int{4}
-}
-
-func (x *Detail) GetForwardingType() string {
-	if x != nil {
-		return x.ForwardingType
-	}
-	return ""
-}
-
-func (x *Detail) GetSlug() string {
-	if x != nil {
-		return x.Slug
-	}
-	return ""
-}
-
-func (x *Detail) GetUserId() string {
-	if x != nil {
-		return x.UserId
-	}
-	return ""
-}
-
-func (x *Detail) GetActive() bool {
-	if x != nil {
-		return x.Active
-	}
-	return false
-}
-
-func (x *Detail) GetStartedAt() *timestamppb.Timestamp {
-	if x != nil {
-		return x.StartedAt
-	}
-	return nil
 }
 
 var File_user_proto protoreflect.FileDescriptor
@@ -325,31 +168,18 @@ var File_user_proto protoreflect.FileDescriptor
 const file_user_proto_rawDesc = "" +
 	"\n" +
 	"\n" +
-	"user.proto\x12\x04slug\x1a\x1fgoogle/protobuf/timestamp.proto\"-\n" +
+	"user.proto\x12\x04user\"-\n" +
 	"\fCheckRequest\x12\x1d\n" +
 	"\n" +
-	"auth_token\x18\x01 \x01(\tR\tauthToken\"H\n" +
+	"auth_token\x18\x01 \x01(\tR\tauthToken\"\\\n" +
 	"\rCheckResponse\x127\n" +
-	"\bresponse\x18\x01 \x01(\x0e2\x1b.slug.AuthorizationResponseR\bresponse\"/\n" +
-	"\x11GetSessionRequest\x12\x1a\n" +
-	"\bidentity\x18\x01 \x01(\tR\bidentity\"=\n" +
-	"\x13GetSessionsResponse\x12&\n" +
-	"\adetails\x18\x01 \x03(\v2\f.slug.DetailR\adetails\"\xb1\x01\n" +
-	"\x06Detail\x12'\n" +
-	"\x0fforwarding_type\x18\x01 \x01(\tR\x0eforwardingType\x12\x12\n" +
-	"\x04slug\x18\x02 \x01(\tR\x04slug\x12\x17\n" +
-	"\auser_id\x18\x03 \x01(\tR\x06userId\x12\x16\n" +
-	"\x06active\x18\x04 \x01(\bR\x06active\x129\n" +
-	"\n" +
-	"started_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\tstartedAt*S\n" +
+	"\bresponse\x18\x01 \x01(\x0e2\x1b.user.AuthorizationResponseR\bresponse\x12\x12\n" +
+	"\x04user\x18\x02 \x01(\tR\x04user*S\n" +
 	"\x15AuthorizationResponse\x12\x1b\n" +
 	"\x17MESSAGE_TYPE_AUTHORIZED\x10\x00\x12\x1d\n" +
 	"\x19MESSAGE_TYPE_UNAUTHORIZED\x10\x012?\n" +
 	"\vUserService\x120\n" +
-	"\x05Check\x12\x12.slug.CheckRequest\x1a\x13.slug.CheckResponse2P\n" +
-	"\fUserSessions\x12@\n" +
-	"\n" +
-	"GetSession\x12\x17.slug.GetSessionRequest\x1a\x19.slug.GetSessionsResponseB\aZ\x05./genb\x06proto3"
+	"\x05Check\x12\x12.user.CheckRequest\x1a\x13.user.CheckResponseB\aZ\x05./genb\x06proto3"
 
 var (
 	file_user_proto_rawDescOnce sync.Once
@@ -364,29 +194,21 @@ func file_user_proto_rawDescGZIP() []byte {
 }
 
 var file_user_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_user_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_user_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_user_proto_goTypes = []any{
-	(AuthorizationResponse)(0),    // 0: slug.AuthorizationResponse
-	(*CheckRequest)(nil),          // 1: slug.CheckRequest
-	(*CheckResponse)(nil),         // 2: slug.CheckResponse
-	(*GetSessionRequest)(nil),     // 3: slug.GetSessionRequest
-	(*GetSessionsResponse)(nil),   // 4: slug.GetSessionsResponse
-	(*Detail)(nil),                // 5: slug.Detail
-	(*timestamppb.Timestamp)(nil), // 6: google.protobuf.Timestamp
+	(AuthorizationResponse)(0), // 0: user.AuthorizationResponse
+	(*CheckRequest)(nil),       // 1: user.CheckRequest
+	(*CheckResponse)(nil),      // 2: user.CheckResponse
 }
 var file_user_proto_depIdxs = []int32{
-	0, // 0: slug.CheckResponse.response:type_name -> slug.AuthorizationResponse
-	5, // 1: slug.GetSessionsResponse.details:type_name -> slug.Detail
-	6, // 2: slug.Detail.started_at:type_name -> google.protobuf.Timestamp
-	1, // 3: slug.UserService.Check:input_type -> slug.CheckRequest
-	3, // 4: slug.UserSessions.GetSession:input_type -> slug.GetSessionRequest
-	2, // 5: slug.UserService.Check:output_type -> slug.CheckResponse
-	4, // 6: slug.UserSessions.GetSession:output_type -> slug.GetSessionsResponse
-	5, // [5:7] is the sub-list for method output_type
-	3, // [3:5] is the sub-list for method input_type
-	3, // [3:3] is the sub-list for extension type_name
-	3, // [3:3] is the sub-list for extension extendee
-	0, // [0:3] is the sub-list for field type_name
+	0, // 0: user.CheckResponse.response:type_name -> user.AuthorizationResponse
+	1, // 1: user.UserService.Check:input_type -> user.CheckRequest
+	2, // 2: user.UserService.Check:output_type -> user.CheckResponse
+	2, // [2:3] is the sub-list for method output_type
+	1, // [1:2] is the sub-list for method input_type
+	1, // [1:1] is the sub-list for extension type_name
+	1, // [1:1] is the sub-list for extension extendee
+	0, // [0:1] is the sub-list for field type_name
 }
 
 func init() { file_user_proto_init() }
@@ -400,9 +222,9 @@ func file_user_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_user_proto_rawDesc), len(file_user_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   5,
+			NumMessages:   2,
 			NumExtensions: 0,
-			NumServices:   2,
+			NumServices:   1,
 		},
 		GoTypes:           file_user_proto_goTypes,
 		DependencyIndexes: file_user_proto_depIdxs,

@@ -1,17 +1,11 @@
 syntax = "proto3";
 
-package slug;
+package user;
 
 option go_package = "./gen";
 
-import "google/protobuf/timestamp.proto";
-
 service UserService {
-  rpc Check(CheckRequest) returns (CheckResponse);
-}
-
-service UserSessions {
-    rpc GetSession(GetSessionRequest) returns (GetSessionsResponse);
+    rpc Check(CheckRequest) returns (CheckResponse);
 }
 
 enum AuthorizationResponse {
@@ -25,20 +19,5 @@ message CheckRequest {
 
 message CheckResponse {
   AuthorizationResponse response = 1;
-}
-
-message GetSessionRequest {
-  string identity = 1;
-}
-
-message GetSessionsResponse {
-  repeated Detail details = 1;
-}
-
-message Detail {
-  string forwarding_type = 1;
-  string slug = 2;
-  string user_id = 3;
-  bool active = 4;
-  google.protobuf.Timestamp started_at = 5;
+  string user = 2;
 }

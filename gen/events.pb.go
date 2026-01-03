@@ -9,6 +9,7 @@ package gen
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -73,32 +74,32 @@ func (EventType) EnumDescriptor() ([]byte, []int) {
 	return file_events_proto_rawDescGZIP(), []int{0}
 }
 
-type Controller struct {
+type Events struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	Type  EventType              `protobuf:"varint,1,opt,name=type,proto3,enum=slug.EventType" json:"type,omitempty"`
+	Type  EventType              `protobuf:"varint,1,opt,name=type,proto3,enum=events.EventType" json:"type,omitempty"`
 	// Types that are valid to be assigned to Payload:
 	//
-	//	*Controller_SlugEvent
-	//	*Controller_GetSessionsEvent
-	Payload       isController_Payload `protobuf_oneof:"payload"`
+	//	*Events_SlugEvent
+	//	*Events_GetSessionsEvent
+	Payload       isEvents_Payload `protobuf_oneof:"payload"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *Controller) Reset() {
-	*x = Controller{}
+func (x *Events) Reset() {
+	*x = Events{}
 	mi := &file_events_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *Controller) String() string {
+func (x *Events) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*Controller) ProtoMessage() {}
+func (*Events) ProtoMessage() {}
 
-func (x *Controller) ProtoReflect() protoreflect.Message {
+func (x *Events) ProtoReflect() protoreflect.Message {
 	mi := &file_events_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -110,86 +111,86 @@ func (x *Controller) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Controller.ProtoReflect.Descriptor instead.
-func (*Controller) Descriptor() ([]byte, []int) {
+// Deprecated: Use Events.ProtoReflect.Descriptor instead.
+func (*Events) Descriptor() ([]byte, []int) {
 	return file_events_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *Controller) GetType() EventType {
+func (x *Events) GetType() EventType {
 	if x != nil {
 		return x.Type
 	}
 	return EventType_AUTHENTICATION
 }
 
-func (x *Controller) GetPayload() isController_Payload {
+func (x *Events) GetPayload() isEvents_Payload {
 	if x != nil {
 		return x.Payload
 	}
 	return nil
 }
 
-func (x *Controller) GetSlugEvent() *SlugChangeEvent {
+func (x *Events) GetSlugEvent() *SlugChangeEvent {
 	if x != nil {
-		if x, ok := x.Payload.(*Controller_SlugEvent); ok {
+		if x, ok := x.Payload.(*Events_SlugEvent); ok {
 			return x.SlugEvent
 		}
 	}
 	return nil
 }
 
-func (x *Controller) GetGetSessionsEvent() *GetSessionsEvent {
+func (x *Events) GetGetSessionsEvent() *GetSessionsEvent {
 	if x != nil {
-		if x, ok := x.Payload.(*Controller_GetSessionsEvent); ok {
+		if x, ok := x.Payload.(*Events_GetSessionsEvent); ok {
 			return x.GetSessionsEvent
 		}
 	}
 	return nil
 }
 
-type isController_Payload interface {
-	isController_Payload()
+type isEvents_Payload interface {
+	isEvents_Payload()
 }
 
-type Controller_SlugEvent struct {
+type Events_SlugEvent struct {
 	SlugEvent *SlugChangeEvent `protobuf:"bytes,11,opt,name=slug_event,json=slugEvent,proto3,oneof"`
 }
 
-type Controller_GetSessionsEvent struct {
+type Events_GetSessionsEvent struct {
 	GetSessionsEvent *GetSessionsEvent `protobuf:"bytes,12,opt,name=get_sessions_event,json=getSessionsEvent,proto3,oneof"`
 }
 
-func (*Controller_SlugEvent) isController_Payload() {}
+func (*Events_SlugEvent) isEvents_Payload() {}
 
-func (*Controller_GetSessionsEvent) isController_Payload() {}
+func (*Events_GetSessionsEvent) isEvents_Payload() {}
 
-type Client struct {
+type Node struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	Type  EventType              `protobuf:"varint,1,opt,name=type,proto3,enum=slug.EventType" json:"type,omitempty"`
+	Type  EventType              `protobuf:"varint,1,opt,name=type,proto3,enum=events.EventType" json:"type,omitempty"`
 	// Types that are valid to be assigned to Payload:
 	//
-	//	*Client_AuthEvent
-	//	*Client_SlugEventResponse
-	//	*Client_GetSessionsEvent
-	Payload       isClient_Payload `protobuf_oneof:"payload"`
+	//	*Node_AuthEvent
+	//	*Node_SlugEventResponse
+	//	*Node_GetSessionsEvent
+	Payload       isNode_Payload `protobuf_oneof:"payload"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *Client) Reset() {
-	*x = Client{}
+func (x *Node) Reset() {
+	*x = Node{}
 	mi := &file_events_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *Client) String() string {
+func (x *Node) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*Client) ProtoMessage() {}
+func (*Node) ProtoMessage() {}
 
-func (x *Client) ProtoReflect() protoreflect.Message {
+func (x *Node) ProtoReflect() protoreflect.Message {
 	mi := &file_events_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -201,73 +202,73 @@ func (x *Client) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Client.ProtoReflect.Descriptor instead.
-func (*Client) Descriptor() ([]byte, []int) {
+// Deprecated: Use Node.ProtoReflect.Descriptor instead.
+func (*Node) Descriptor() ([]byte, []int) {
 	return file_events_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *Client) GetType() EventType {
+func (x *Node) GetType() EventType {
 	if x != nil {
 		return x.Type
 	}
 	return EventType_AUTHENTICATION
 }
 
-func (x *Client) GetPayload() isClient_Payload {
+func (x *Node) GetPayload() isNode_Payload {
 	if x != nil {
 		return x.Payload
 	}
 	return nil
 }
 
-func (x *Client) GetAuthEvent() *Authentication {
+func (x *Node) GetAuthEvent() *Authentication {
 	if x != nil {
-		if x, ok := x.Payload.(*Client_AuthEvent); ok {
+		if x, ok := x.Payload.(*Node_AuthEvent); ok {
 			return x.AuthEvent
 		}
 	}
 	return nil
 }
 
-func (x *Client) GetSlugEventResponse() *SlugChangeEventResponse {
+func (x *Node) GetSlugEventResponse() *SlugChangeEventResponse {
 	if x != nil {
-		if x, ok := x.Payload.(*Client_SlugEventResponse); ok {
+		if x, ok := x.Payload.(*Node_SlugEventResponse); ok {
 			return x.SlugEventResponse
 		}
 	}
 	return nil
 }
 
-func (x *Client) GetGetSessionsEvent() *GetSessionsResponse {
+func (x *Node) GetGetSessionsEvent() *GetSessionsResponse {
 	if x != nil {
-		if x, ok := x.Payload.(*Client_GetSessionsEvent); ok {
+		if x, ok := x.Payload.(*Node_GetSessionsEvent); ok {
 			return x.GetSessionsEvent
 		}
 	}
 	return nil
 }
 
-type isClient_Payload interface {
-	isClient_Payload()
+type isNode_Payload interface {
+	isNode_Payload()
 }
 
-type Client_AuthEvent struct {
+type Node_AuthEvent struct {
 	AuthEvent *Authentication `protobuf:"bytes,10,opt,name=auth_event,json=authEvent,proto3,oneof"`
 }
 
-type Client_SlugEventResponse struct {
+type Node_SlugEventResponse struct {
 	SlugEventResponse *SlugChangeEventResponse `protobuf:"bytes,11,opt,name=slug_event_response,json=slugEventResponse,proto3,oneof"`
 }
 
-type Client_GetSessionsEvent struct {
+type Node_GetSessionsEvent struct {
 	GetSessionsEvent *GetSessionsResponse `protobuf:"bytes,12,opt,name=get_sessions_event,json=getSessionsEvent,proto3,oneof"`
 }
 
-func (*Client_AuthEvent) isClient_Payload() {}
+func (*Node_AuthEvent) isNode_Payload() {}
 
-func (*Client_SlugEventResponse) isClient_Payload() {}
+func (*Node_SlugEventResponse) isNode_Payload() {}
 
-func (*Client_GetSessionsEvent) isClient_Payload() {}
+func (*Node_GetSessionsEvent) isNode_Payload() {}
 
 type Authentication struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -469,26 +470,152 @@ func (x *GetSessionsEvent) GetIdentity() string {
 	return ""
 }
 
+type GetSessionsResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Details       []*Detail              `protobuf:"bytes,1,rep,name=details,proto3" json:"details,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetSessionsResponse) Reset() {
+	*x = GetSessionsResponse{}
+	mi := &file_events_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetSessionsResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetSessionsResponse) ProtoMessage() {}
+
+func (x *GetSessionsResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_events_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetSessionsResponse.ProtoReflect.Descriptor instead.
+func (*GetSessionsResponse) Descriptor() ([]byte, []int) {
+	return file_events_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *GetSessionsResponse) GetDetails() []*Detail {
+	if x != nil {
+		return x.Details
+	}
+	return nil
+}
+
+type Detail struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	Node           string                 `protobuf:"bytes,1,opt,name=node,proto3" json:"node,omitempty"`
+	ForwardingType string                 `protobuf:"bytes,2,opt,name=forwarding_type,json=forwardingType,proto3" json:"forwarding_type,omitempty"`
+	Slug           string                 `protobuf:"bytes,3,opt,name=slug,proto3" json:"slug,omitempty"`
+	UserId         string                 `protobuf:"bytes,4,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	Active         bool                   `protobuf:"varint,5,opt,name=active,proto3" json:"active,omitempty"`
+	StartedAt      *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=started_at,json=startedAt,proto3" json:"started_at,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *Detail) Reset() {
+	*x = Detail{}
+	mi := &file_events_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Detail) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Detail) ProtoMessage() {}
+
+func (x *Detail) ProtoReflect() protoreflect.Message {
+	mi := &file_events_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Detail.ProtoReflect.Descriptor instead.
+func (*Detail) Descriptor() ([]byte, []int) {
+	return file_events_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *Detail) GetNode() string {
+	if x != nil {
+		return x.Node
+	}
+	return ""
+}
+
+func (x *Detail) GetForwardingType() string {
+	if x != nil {
+		return x.ForwardingType
+	}
+	return ""
+}
+
+func (x *Detail) GetSlug() string {
+	if x != nil {
+		return x.Slug
+	}
+	return ""
+}
+
+func (x *Detail) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *Detail) GetActive() bool {
+	if x != nil {
+		return x.Active
+	}
+	return false
+}
+
+func (x *Detail) GetStartedAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.StartedAt
+	}
+	return nil
+}
+
 var File_events_proto protoreflect.FileDescriptor
 
 const file_events_proto_rawDesc = "" +
 	"\n" +
-	"\fevents.proto\x12\x04slug\x1a\n" +
-	"user.proto\"\xbc\x01\n" +
+	"\fevents.proto\x12\x06events\x1a\x1fgoogle/protobuf/timestamp.proto\"\xbe\x01\n" +
+	"\x06Events\x12%\n" +
+	"\x04type\x18\x01 \x01(\x0e2\x11.events.EventTypeR\x04type\x128\n" +
 	"\n" +
-	"Controller\x12#\n" +
-	"\x04type\x18\x01 \x01(\x0e2\x0f.slug.EventTypeR\x04type\x126\n" +
-	"\n" +
-	"slug_event\x18\v \x01(\v2\x15.slug.SlugChangeEventH\x00R\tslugEvent\x12F\n" +
-	"\x12get_sessions_event\x18\f \x01(\v2\x16.slug.GetSessionsEventH\x00R\x10getSessionsEventB\t\n" +
-	"\apayload\"\x8b\x02\n" +
-	"\x06Client\x12#\n" +
-	"\x04type\x18\x01 \x01(\x0e2\x0f.slug.EventTypeR\x04type\x125\n" +
+	"slug_event\x18\v \x01(\v2\x17.events.SlugChangeEventH\x00R\tslugEvent\x12H\n" +
+	"\x12get_sessions_event\x18\f \x01(\v2\x18.events.GetSessionsEventH\x00R\x10getSessionsEventB\t\n" +
+	"\apayload\"\x91\x02\n" +
+	"\x04Node\x12%\n" +
+	"\x04type\x18\x01 \x01(\x0e2\x11.events.EventTypeR\x04type\x127\n" +
 	"\n" +
 	"auth_event\x18\n" +
-	" \x01(\v2\x14.slug.AuthenticationH\x00R\tauthEvent\x12O\n" +
-	"\x13slug_event_response\x18\v \x01(\v2\x1d.slug.SlugChangeEventResponseH\x00R\x11slugEventResponse\x12I\n" +
-	"\x12get_sessions_event\x18\f \x01(\v2\x19.slug.GetSessionsResponseH\x00R\x10getSessionsEventB\t\n" +
+	" \x01(\v2\x16.events.AuthenticationH\x00R\tauthEvent\x12Q\n" +
+	"\x13slug_event_response\x18\v \x01(\v2\x1f.events.SlugChangeEventResponseH\x00R\x11slugEventResponse\x12K\n" +
+	"\x12get_sessions_event\x18\f \x01(\v2\x1b.events.GetSessionsResponseH\x00R\x10getSessionsEventB\t\n" +
 	"\apayload\"K\n" +
 	"\x0eAuthentication\x12\x1d\n" +
 	"\n" +
@@ -501,14 +628,24 @@ const file_events_proto_rawDesc = "" +
 	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
 	"\amessage\x18\x02 \x01(\tR\amessage\".\n" +
 	"\x10GetSessionsEvent\x12\x1a\n" +
-	"\bidentity\x18\x01 \x01(\tR\bidentity*\\\n" +
+	"\bidentity\x18\x01 \x01(\tR\bidentity\"?\n" +
+	"\x13GetSessionsResponse\x12(\n" +
+	"\adetails\x18\x01 \x03(\v2\x0e.events.DetailR\adetails\"\xc5\x01\n" +
+	"\x06Detail\x12\x12\n" +
+	"\x04node\x18\x01 \x01(\tR\x04node\x12'\n" +
+	"\x0fforwarding_type\x18\x02 \x01(\tR\x0eforwardingType\x12\x12\n" +
+	"\x04slug\x18\x03 \x01(\tR\x04slug\x12\x17\n" +
+	"\auser_id\x18\x04 \x01(\tR\x06userId\x12\x16\n" +
+	"\x06active\x18\x05 \x01(\bR\x06active\x129\n" +
+	"\n" +
+	"started_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\tstartedAt*\\\n" +
 	"\tEventType\x12\x12\n" +
 	"\x0eAUTHENTICATION\x10\x00\x12\x0f\n" +
 	"\vSLUG_CHANGE\x10\x01\x12\x18\n" +
 	"\x14SLUG_CHANGE_RESPONSE\x10\x02\x12\x10\n" +
-	"\fGET_SESSIONS\x10\x032?\n" +
-	"\fEventService\x12/\n" +
-	"\tSubscribe\x12\f.slug.Client\x1a\x10.slug.Controller(\x010\x01B\aZ\x05./genb\x06proto3"
+	"\fGET_SESSIONS\x10\x032=\n" +
+	"\fEventService\x12-\n" +
+	"\tSubscribe\x12\f.events.Node\x1a\x0e.events.Events(\x010\x01B\aZ\x05./genb\x06proto3"
 
 var (
 	file_events_proto_rawDescOnce sync.Once
@@ -523,32 +660,36 @@ func file_events_proto_rawDescGZIP() []byte {
 }
 
 var file_events_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_events_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_events_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_events_proto_goTypes = []any{
-	(EventType)(0),                  // 0: slug.EventType
-	(*Controller)(nil),              // 1: slug.Controller
-	(*Client)(nil),                  // 2: slug.Client
-	(*Authentication)(nil),          // 3: slug.Authentication
-	(*SlugChangeEvent)(nil),         // 4: slug.SlugChangeEvent
-	(*SlugChangeEventResponse)(nil), // 5: slug.SlugChangeEventResponse
-	(*GetSessionsEvent)(nil),        // 6: slug.GetSessionsEvent
-	(*GetSessionsResponse)(nil),     // 7: slug.GetSessionsResponse
+	(EventType)(0),                  // 0: events.EventType
+	(*Events)(nil),                  // 1: events.Events
+	(*Node)(nil),                    // 2: events.Node
+	(*Authentication)(nil),          // 3: events.Authentication
+	(*SlugChangeEvent)(nil),         // 4: events.SlugChangeEvent
+	(*SlugChangeEventResponse)(nil), // 5: events.SlugChangeEventResponse
+	(*GetSessionsEvent)(nil),        // 6: events.GetSessionsEvent
+	(*GetSessionsResponse)(nil),     // 7: events.GetSessionsResponse
+	(*Detail)(nil),                  // 8: events.Detail
+	(*timestamppb.Timestamp)(nil),   // 9: google.protobuf.Timestamp
 }
 var file_events_proto_depIdxs = []int32{
-	0, // 0: slug.Controller.type:type_name -> slug.EventType
-	4, // 1: slug.Controller.slug_event:type_name -> slug.SlugChangeEvent
-	6, // 2: slug.Controller.get_sessions_event:type_name -> slug.GetSessionsEvent
-	0, // 3: slug.Client.type:type_name -> slug.EventType
-	3, // 4: slug.Client.auth_event:type_name -> slug.Authentication
-	5, // 5: slug.Client.slug_event_response:type_name -> slug.SlugChangeEventResponse
-	7, // 6: slug.Client.get_sessions_event:type_name -> slug.GetSessionsResponse
-	2, // 7: slug.EventService.Subscribe:input_type -> slug.Client
-	1, // 8: slug.EventService.Subscribe:output_type -> slug.Controller
-	8, // [8:9] is the sub-list for method output_type
-	7, // [7:8] is the sub-list for method input_type
-	7, // [7:7] is the sub-list for extension type_name
-	7, // [7:7] is the sub-list for extension extendee
-	0, // [0:7] is the sub-list for field type_name
+	0,  // 0: events.Events.type:type_name -> events.EventType
+	4,  // 1: events.Events.slug_event:type_name -> events.SlugChangeEvent
+	6,  // 2: events.Events.get_sessions_event:type_name -> events.GetSessionsEvent
+	0,  // 3: events.Node.type:type_name -> events.EventType
+	3,  // 4: events.Node.auth_event:type_name -> events.Authentication
+	5,  // 5: events.Node.slug_event_response:type_name -> events.SlugChangeEventResponse
+	7,  // 6: events.Node.get_sessions_event:type_name -> events.GetSessionsResponse
+	8,  // 7: events.GetSessionsResponse.details:type_name -> events.Detail
+	9,  // 8: events.Detail.started_at:type_name -> google.protobuf.Timestamp
+	2,  // 9: events.EventService.Subscribe:input_type -> events.Node
+	1,  // 10: events.EventService.Subscribe:output_type -> events.Events
+	10, // [10:11] is the sub-list for method output_type
+	9,  // [9:10] is the sub-list for method input_type
+	9,  // [9:9] is the sub-list for extension type_name
+	9,  // [9:9] is the sub-list for extension extendee
+	0,  // [0:9] is the sub-list for field type_name
 }
 
 func init() { file_events_proto_init() }
@@ -556,15 +697,14 @@ func file_events_proto_init() {
 	if File_events_proto != nil {
 		return
 	}
-	file_user_proto_init()
 	file_events_proto_msgTypes[0].OneofWrappers = []any{
-		(*Controller_SlugEvent)(nil),
-		(*Controller_GetSessionsEvent)(nil),
+		(*Events_SlugEvent)(nil),
+		(*Events_GetSessionsEvent)(nil),
 	}
 	file_events_proto_msgTypes[1].OneofWrappers = []any{
-		(*Client_AuthEvent)(nil),
-		(*Client_SlugEventResponse)(nil),
-		(*Client_GetSessionsEvent)(nil),
+		(*Node_AuthEvent)(nil),
+		(*Node_SlugEventResponse)(nil),
+		(*Node_GetSessionsEvent)(nil),
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -572,7 +712,7 @@ func file_events_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_events_proto_rawDesc), len(file_events_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   6,
+			NumMessages:   8,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

@@ -19,7 +19,7 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	UserService_Check_FullMethodName = "/slug.UserService/Check"
+	UserService_Check_FullMethodName = "/user.UserService/Check"
 )
 
 // UserServiceClient is the client API for UserService service.
@@ -108,114 +108,12 @@ func _UserService_Check_Handler(srv interface{}, ctx context.Context, dec func(i
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var UserService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "slug.UserService",
+	ServiceName: "user.UserService",
 	HandlerType: (*UserServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "Check",
 			Handler:    _UserService_Check_Handler,
-		},
-	},
-	Streams:  []grpc.StreamDesc{},
-	Metadata: "user.proto",
-}
-
-const (
-	UserSessions_GetSession_FullMethodName = "/slug.UserSessions/GetSession"
-)
-
-// UserSessionsClient is the client API for UserSessions service.
-//
-// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type UserSessionsClient interface {
-	GetSession(ctx context.Context, in *GetSessionRequest, opts ...grpc.CallOption) (*GetSessionsResponse, error)
-}
-
-type userSessionsClient struct {
-	cc grpc.ClientConnInterface
-}
-
-func NewUserSessionsClient(cc grpc.ClientConnInterface) UserSessionsClient {
-	return &userSessionsClient{cc}
-}
-
-func (c *userSessionsClient) GetSession(ctx context.Context, in *GetSessionRequest, opts ...grpc.CallOption) (*GetSessionsResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetSessionsResponse)
-	err := c.cc.Invoke(ctx, UserSessions_GetSession_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-// UserSessionsServer is the server API for UserSessions service.
-// All implementations must embed UnimplementedUserSessionsServer
-// for forward compatibility.
-type UserSessionsServer interface {
-	GetSession(context.Context, *GetSessionRequest) (*GetSessionsResponse, error)
-	mustEmbedUnimplementedUserSessionsServer()
-}
-
-// UnimplementedUserSessionsServer must be embedded to have
-// forward compatible implementations.
-//
-// NOTE: this should be embedded by value instead of pointer to avoid a nil
-// pointer dereference when methods are called.
-type UnimplementedUserSessionsServer struct{}
-
-func (UnimplementedUserSessionsServer) GetSession(context.Context, *GetSessionRequest) (*GetSessionsResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetSession not implemented")
-}
-func (UnimplementedUserSessionsServer) mustEmbedUnimplementedUserSessionsServer() {}
-func (UnimplementedUserSessionsServer) testEmbeddedByValue()                      {}
-
-// UnsafeUserSessionsServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to UserSessionsServer will
-// result in compilation errors.
-type UnsafeUserSessionsServer interface {
-	mustEmbedUnimplementedUserSessionsServer()
-}
-
-func RegisterUserSessionsServer(s grpc.ServiceRegistrar, srv UserSessionsServer) {
-	// If the following call panics, it indicates UnimplementedUserSessionsServer was
-	// embedded by pointer and is nil.  This will cause panics if an
-	// unimplemented method is ever invoked, so we test this at initialization
-	// time to prevent it from happening at runtime later due to I/O.
-	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
-		t.testEmbeddedByValue()
-	}
-	s.RegisterService(&UserSessions_ServiceDesc, srv)
-}
-
-func _UserSessions_GetSession_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetSessionRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserSessionsServer).GetSession(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: UserSessions_GetSession_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserSessionsServer).GetSession(ctx, req.(*GetSessionRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-// UserSessions_ServiceDesc is the grpc.ServiceDesc for UserSessions service.
-// It's only intended for direct use with grpc.RegisterService,
-// and not to be introspected or modified (even as a copy)
-var UserSessions_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "slug.UserSessions",
-	HandlerType: (*UserSessionsServer)(nil),
-	Methods: []grpc.MethodDesc{
-		{
-			MethodName: "GetSession",
-			Handler:    _UserSessions_GetSession_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

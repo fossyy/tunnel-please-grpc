@@ -1,11 +1,13 @@
 syntax = "proto3";
 
-package slug;
+package events;
 
 option go_package = "./gen";
-import "user.proto";
+
+import "google/protobuf/timestamp.proto";
+
 service EventService {
-  rpc Subscribe(stream Client) returns (stream Controller);
+  rpc Subscribe(stream Node) returns (stream Events);
 }
 
 enum EventType {
@@ -15,7 +17,7 @@ enum EventType {
   GET_SESSIONS = 3;
 }
 
-message Controller {
+message Events {
   EventType type = 1;
 
   oneof payload {
@@ -24,7 +26,7 @@ message Controller {
   }
 }
 
-message Client {
+message Node {
   EventType type = 1;
 
   oneof payload {
@@ -51,4 +53,17 @@ message SlugChangeEventResponse {
 
 message GetSessionsEvent {
   string identity = 1;
+}
+
+message GetSessionsResponse {
+  repeated Detail details = 1;
+}
+
+message Detail {
+  string node = 1;
+  string forwarding_type = 2;
+  string slug = 3;
+  string user_id = 4;
+  bool active = 5;
+  google.protobuf.Timestamp started_at = 6;
 }
