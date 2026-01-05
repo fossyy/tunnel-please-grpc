@@ -324,8 +324,9 @@ func (x *Authentication) GetIdentity() string {
 
 type SlugChangeEvent struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Old           string                 `protobuf:"bytes,1,opt,name=old,proto3" json:"old,omitempty"`
-	New           string                 `protobuf:"bytes,2,opt,name=new,proto3" json:"new,omitempty"`
+	User          string                 `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
+	Old           string                 `protobuf:"bytes,2,opt,name=old,proto3" json:"old,omitempty"`
+	New           string                 `protobuf:"bytes,3,opt,name=new,proto3" json:"new,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -358,6 +359,13 @@ func (x *SlugChangeEvent) ProtoReflect() protoreflect.Message {
 // Deprecated: Use SlugChangeEvent.ProtoReflect.Descriptor instead.
 func (*SlugChangeEvent) Descriptor() ([]byte, []int) {
 	return file_events_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *SlugChangeEvent) GetUser() string {
+	if x != nil {
+		return x.User
+	}
+	return ""
 }
 
 func (x *SlugChangeEvent) GetOld() string {
@@ -620,10 +628,11 @@ const file_events_proto_rawDesc = "" +
 	"\x0eAuthentication\x12\x1d\n" +
 	"\n" +
 	"auth_token\x18\x01 \x01(\tR\tauthToken\x12\x1a\n" +
-	"\bidentity\x18\x02 \x01(\tR\bidentity\"5\n" +
-	"\x0fSlugChangeEvent\x12\x10\n" +
-	"\x03old\x18\x01 \x01(\tR\x03old\x12\x10\n" +
-	"\x03new\x18\x02 \x01(\tR\x03new\"M\n" +
+	"\bidentity\x18\x02 \x01(\tR\bidentity\"I\n" +
+	"\x0fSlugChangeEvent\x12\x12\n" +
+	"\x04user\x18\x01 \x01(\tR\x04user\x12\x10\n" +
+	"\x03old\x18\x02 \x01(\tR\x03old\x12\x10\n" +
+	"\x03new\x18\x03 \x01(\tR\x03new\"M\n" +
 	"\x17SlugChangeEventResponse\x12\x18\n" +
 	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
 	"\amessage\x18\x02 \x01(\tR\amessage\".\n" +

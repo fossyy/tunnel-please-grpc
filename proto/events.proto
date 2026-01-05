@@ -42,8 +42,9 @@ message Authentication {
 }
 
 message SlugChangeEvent {
-  string old = 1;
-  string new = 2;
+  string user = 1;
+  string old = 2;
+  string new = 3;
 }
 
 message SlugChangeEventResponse {
