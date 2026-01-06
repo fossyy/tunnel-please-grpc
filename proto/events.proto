@@ -15,6 +15,7 @@ enum EventType {
   SLUG_CHANGE        = 1;
   SLUG_CHANGE_RESPONSE        = 2;
   GET_SESSIONS = 3;
+  TERMINATE_SESSION = 4;
 }
 
 message Events {
@@ -23,6 +24,7 @@ message Events {
   oneof payload {
     SlugChangeEvent slug_event = 11;
     GetSessionsEvent get_sessions_event = 12;
+    TerminateSessionEvent terminate_session_event = 13;
   }
 }
 
@@ -33,6 +35,7 @@ message Node {
     Authentication auth_event = 10;
     SlugChangeEventResponse slug_event_response = 11;
     GetSessionsResponse get_sessions_event = 12;
+    TerminateSessionEventResponse terminate_session_event_response = 13;
   }
 }
 
@@ -67,4 +70,21 @@ message Detail {
   string user_id = 4;
   bool active = 5;
   google.protobuf.Timestamp started_at = 6;
+}
+
+enum TunnelType {
+  UNSPECIFIED = 0;
+  HTTP = 1;
+  TCP = 2;
+}
+
+message TerminateSessionEvent {
+  string user = 1;
+  TunnelType tunnelType = 2;
+  string slug = 3;
+}
+
+message TerminateSessionEventResponse {
+  bool success = 1;
+  string message = 2;
 }

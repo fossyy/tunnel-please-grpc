@@ -29,6 +29,7 @@ const (
 	EventType_SLUG_CHANGE          EventType = 1
 	EventType_SLUG_CHANGE_RESPONSE EventType = 2
 	EventType_GET_SESSIONS         EventType = 3
+	EventType_TERMINATE_SESSION    EventType = 4
 )
 
 // Enum value maps for EventType.
@@ -38,12 +39,14 @@ var (
 		1: "SLUG_CHANGE",
 		2: "SLUG_CHANGE_RESPONSE",
 		3: "GET_SESSIONS",
+		4: "TERMINATE_SESSION",
 	}
 	EventType_value = map[string]int32{
 		"AUTHENTICATION":       0,
 		"SLUG_CHANGE":          1,
 		"SLUG_CHANGE_RESPONSE": 2,
 		"GET_SESSIONS":         3,
+		"TERMINATE_SESSION":    4,
 	}
 )
 
@@ -74,6 +77,55 @@ func (EventType) EnumDescriptor() ([]byte, []int) {
 	return file_events_proto_rawDescGZIP(), []int{0}
 }
 
+type TunnelType int32
+
+const (
+	TunnelType_UNSPECIFIED TunnelType = 0
+	TunnelType_HTTP        TunnelType = 1
+	TunnelType_TCP         TunnelType = 2
+)
+
+// Enum value maps for TunnelType.
+var (
+	TunnelType_name = map[int32]string{
+		0: "UNSPECIFIED",
+		1: "HTTP",
+		2: "TCP",
+	}
+	TunnelType_value = map[string]int32{
+		"UNSPECIFIED": 0,
+		"HTTP":        1,
+		"TCP":         2,
+	}
+)
+
+func (x TunnelType) Enum() *TunnelType {
+	p := new(TunnelType)
+	*p = x
+	return p
+}
+
+func (x TunnelType) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (TunnelType) Descriptor() protoreflect.EnumDescriptor {
+	return file_events_proto_enumTypes[1].Descriptor()
+}
+
+func (TunnelType) Type() protoreflect.EnumType {
+	return &file_events_proto_enumTypes[1]
+}
+
+func (x TunnelType) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use TunnelType.Descriptor instead.
+func (TunnelType) EnumDescriptor() ([]byte, []int) {
+	return file_events_proto_rawDescGZIP(), []int{1}
+}
+
 type Events struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	Type  EventType              `protobuf:"varint,1,opt,name=type,proto3,enum=events.EventType" json:"type,omitempty"`
@@ -81,6 +133,7 @@ type Events struct {
 	//
 	//	*Events_SlugEvent
 	//	*Events_GetSessionsEvent
+	//	*Events_TerminateSessionEvent
 	Payload       isEvents_Payload `protobuf_oneof:"payload"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -148,6 +201,15 @@ func (x *Events) GetGetSessionsEvent() *GetSessionsEvent {
 	return nil
 }
 
+func (x *Events) GetTerminateSessionEvent() *TerminateSessionEvent {
+	if x != nil {
+		if x, ok := x.Payload.(*Events_TerminateSessionEvent); ok {
+			return x.TerminateSessionEvent
+		}
+	}
+	return nil
+}
+
 type isEvents_Payload interface {
 	isEvents_Payload()
 }
@@ -160,9 +222,15 @@ type Events_GetSessionsEvent struct {
 	GetSessionsEvent *GetSessionsEvent `protobuf:"bytes,12,opt,name=get_sessions_event,json=getSessionsEvent,proto3,oneof"`
 }
 
+type Events_TerminateSessionEvent struct {
+	TerminateSessionEvent *TerminateSessionEvent `protobuf:"bytes,13,opt,name=terminate_session_event,json=terminateSessionEvent,proto3,oneof"`
+}
+
 func (*Events_SlugEvent) isEvents_Payload() {}
 
 func (*Events_GetSessionsEvent) isEvents_Payload() {}
+
+func (*Events_TerminateSessionEvent) isEvents_Payload() {}
 
 type Node struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -172,6 +240,7 @@ type Node struct {
 	//	*Node_AuthEvent
 	//	*Node_SlugEventResponse
 	//	*Node_GetSessionsEvent
+	//	*Node_TerminateSessionEventResponse
 	Payload       isNode_Payload `protobuf_oneof:"payload"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -248,6 +317,15 @@ func (x *Node) GetGetSessionsEvent() *GetSessionsResponse {
 	return nil
 }
 
+func (x *Node) GetTerminateSessionEventResponse() *TerminateSessionEventResponse {
+	if x != nil {
+		if x, ok := x.Payload.(*Node_TerminateSessionEventResponse); ok {
+			return x.TerminateSessionEventResponse
+		}
+	}
+	return nil
+}
+
 type isNode_Payload interface {
 	isNode_Payload()
 }
@@ -264,11 +342,17 @@ type Node_GetSessionsEvent struct {
 	GetSessionsEvent *GetSessionsResponse `protobuf:"bytes,12,opt,name=get_sessions_event,json=getSessionsEvent,proto3,oneof"`
 }
 
+type Node_TerminateSessionEventResponse struct {
+	TerminateSessionEventResponse *TerminateSessionEventResponse `protobuf:"bytes,13,opt,name=terminate_session_event_response,json=terminateSessionEventResponse,proto3,oneof"`
+}
+
 func (*Node_AuthEvent) isNode_Payload() {}
 
 func (*Node_SlugEventResponse) isNode_Payload() {}
 
 func (*Node_GetSessionsEvent) isNode_Payload() {}
+
+func (*Node_TerminateSessionEventResponse) isNode_Payload() {}
 
 type Authentication struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -606,24 +690,138 @@ func (x *Detail) GetStartedAt() *timestamppb.Timestamp {
 	return nil
 }
 
+type TerminateSessionEvent struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	User          string                 `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
+	TunnelType    TunnelType             `protobuf:"varint,2,opt,name=tunnelType,proto3,enum=events.TunnelType" json:"tunnelType,omitempty"`
+	Slug          string                 `protobuf:"bytes,3,opt,name=slug,proto3" json:"slug,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *TerminateSessionEvent) Reset() {
+	*x = TerminateSessionEvent{}
+	mi := &file_events_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TerminateSessionEvent) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TerminateSessionEvent) ProtoMessage() {}
+
+func (x *TerminateSessionEvent) ProtoReflect() protoreflect.Message {
+	mi := &file_events_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TerminateSessionEvent.ProtoReflect.Descriptor instead.
+func (*TerminateSessionEvent) Descriptor() ([]byte, []int) {
+	return file_events_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *TerminateSessionEvent) GetUser() string {
+	if x != nil {
+		return x.User
+	}
+	return ""
+}
+
+func (x *TerminateSessionEvent) GetTunnelType() TunnelType {
+	if x != nil {
+		return x.TunnelType
+	}
+	return TunnelType_UNSPECIFIED
+}
+
+func (x *TerminateSessionEvent) GetSlug() string {
+	if x != nil {
+		return x.Slug
+	}
+	return ""
+}
+
+type TerminateSessionEventResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *TerminateSessionEventResponse) Reset() {
+	*x = TerminateSessionEventResponse{}
+	mi := &file_events_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TerminateSessionEventResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TerminateSessionEventResponse) ProtoMessage() {}
+
+func (x *TerminateSessionEventResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_events_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TerminateSessionEventResponse.ProtoReflect.Descriptor instead.
+func (*TerminateSessionEventResponse) Descriptor() ([]byte, []int) {
+	return file_events_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *TerminateSessionEventResponse) GetSuccess() bool {
+	if x != nil {
+		return x.Success
+	}
+	return false
+}
+
+func (x *TerminateSessionEventResponse) GetMessage() string {
+	if x != nil {
+		return x.Message
+	}
+	return ""
+}
+
 var File_events_proto protoreflect.FileDescriptor
 
 const file_events_proto_rawDesc = "" +
 	"\n" +
-	"\fevents.proto\x12\x06events\x1a\x1fgoogle/protobuf/timestamp.proto\"\xbe\x01\n" +
+	"\fevents.proto\x12\x06events\x1a\x1fgoogle/protobuf/timestamp.proto\"\x97\x02\n" +
 	"\x06Events\x12%\n" +
 	"\x04type\x18\x01 \x01(\x0e2\x11.events.EventTypeR\x04type\x128\n" +
 	"\n" +
 	"slug_event\x18\v \x01(\v2\x17.events.SlugChangeEventH\x00R\tslugEvent\x12H\n" +
-	"\x12get_sessions_event\x18\f \x01(\v2\x18.events.GetSessionsEventH\x00R\x10getSessionsEventB\t\n" +
-	"\apayload\"\x91\x02\n" +
+	"\x12get_sessions_event\x18\f \x01(\v2\x18.events.GetSessionsEventH\x00R\x10getSessionsEvent\x12W\n" +
+	"\x17terminate_session_event\x18\r \x01(\v2\x1d.events.TerminateSessionEventH\x00R\x15terminateSessionEventB\t\n" +
+	"\apayload\"\x83\x03\n" +
 	"\x04Node\x12%\n" +
 	"\x04type\x18\x01 \x01(\x0e2\x11.events.EventTypeR\x04type\x127\n" +
 	"\n" +
 	"auth_event\x18\n" +
 	" \x01(\v2\x16.events.AuthenticationH\x00R\tauthEvent\x12Q\n" +
 	"\x13slug_event_response\x18\v \x01(\v2\x1f.events.SlugChangeEventResponseH\x00R\x11slugEventResponse\x12K\n" +
-	"\x12get_sessions_event\x18\f \x01(\v2\x1b.events.GetSessionsResponseH\x00R\x10getSessionsEventB\t\n" +
+	"\x12get_sessions_event\x18\f \x01(\v2\x1b.events.GetSessionsResponseH\x00R\x10getSessionsEvent\x12p\n" +
+	" terminate_session_event_response\x18\r \x01(\v2%.events.TerminateSessionEventResponseH\x00R\x1dterminateSessionEventResponseB\t\n" +
 	"\apayload\"K\n" +
 	"\x0eAuthentication\x12\x1d\n" +
 	"\n" +
@@ -647,12 +845,27 @@ const file_events_proto_rawDesc = "" +
 	"\auser_id\x18\x04 \x01(\tR\x06userId\x12\x16\n" +
 	"\x06active\x18\x05 \x01(\bR\x06active\x129\n" +
 	"\n" +
-	"started_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\tstartedAt*\\\n" +
+	"started_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\tstartedAt\"s\n" +
+	"\x15TerminateSessionEvent\x12\x12\n" +
+	"\x04user\x18\x01 \x01(\tR\x04user\x122\n" +
+	"\n" +
+	"tunnelType\x18\x02 \x01(\x0e2\x12.events.TunnelTypeR\n" +
+	"tunnelType\x12\x12\n" +
+	"\x04slug\x18\x03 \x01(\tR\x04slug\"S\n" +
+	"\x1dTerminateSessionEventResponse\x12\x18\n" +
+	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
+	"\amessage\x18\x02 \x01(\tR\amessage*s\n" +
 	"\tEventType\x12\x12\n" +
 	"\x0eAUTHENTICATION\x10\x00\x12\x0f\n" +
 	"\vSLUG_CHANGE\x10\x01\x12\x18\n" +
 	"\x14SLUG_CHANGE_RESPONSE\x10\x02\x12\x10\n" +
-	"\fGET_SESSIONS\x10\x032=\n" +
+	"\fGET_SESSIONS\x10\x03\x12\x15\n" +
+	"\x11TERMINATE_SESSION\x10\x04*0\n" +
+	"\n" +
+	"TunnelType\x12\x0f\n" +
+	"\vUNSPECIFIED\x10\x00\x12\b\n" +
+	"\x04HTTP\x10\x01\x12\a\n" +
+	"\x03TCP\x10\x022=\n" +
 	"\fEventService\x12-\n" +
 	"\tSubscribe\x12\f.events.Node\x1a\x0e.events.Events(\x010\x01B\aZ\x05./genb\x06proto3"
 
@@ -668,37 +881,43 @@ func file_events_proto_rawDescGZIP() []byte {
 	return file_events_proto_rawDescData
 }
 
-var file_events_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_events_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
+var file_events_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
+var file_events_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
 var file_events_proto_goTypes = []any{
-	(EventType)(0),                  // 0: events.EventType
-	(*Events)(nil),                  // 1: events.Events
-	(*Node)(nil),                    // 2: events.Node
-	(*Authentication)(nil),          // 3: events.Authentication
-	(*SlugChangeEvent)(nil),         // 4: events.SlugChangeEvent
-	(*SlugChangeEventResponse)(nil), // 5: events.SlugChangeEventResponse
-	(*GetSessionsEvent)(nil),        // 6: events.GetSessionsEvent
-	(*GetSessionsResponse)(nil),     // 7: events.GetSessionsResponse
-	(*Detail)(nil),                  // 8: events.Detail
-	(*timestamppb.Timestamp)(nil),   // 9: google.protobuf.Timestamp
+	(EventType)(0),                        // 0: events.EventType
+	(TunnelType)(0),                       // 1: events.TunnelType
+	(*Events)(nil),                        // 2: events.Events
+	(*Node)(nil),                          // 3: events.Node
+	(*Authentication)(nil),                // 4: events.Authentication
+	(*SlugChangeEvent)(nil),               // 5: events.SlugChangeEvent
+	(*SlugChangeEventResponse)(nil),       // 6: events.SlugChangeEventResponse
+	(*GetSessionsEvent)(nil),              // 7: events.GetSessionsEvent
+	(*GetSessionsResponse)(nil),           // 8: events.GetSessionsResponse
+	(*Detail)(nil),                        // 9: events.Detail
+	(*TerminateSessionEvent)(nil),         // 10: events.TerminateSessionEvent
+	(*TerminateSessionEventResponse)(nil), // 11: events.TerminateSessionEventResponse
+	(*timestamppb.Timestamp)(nil),         // 12: google.protobuf.Timestamp
 }
 var file_events_proto_depIdxs = []int32{
 	0,  // 0: events.Events.type:type_name -> events.EventType
-	4,  // 1: events.Events.slug_event:type_name -> events.SlugChangeEvent
-	6,  // 2: events.Events.get_sessions_event:type_name -> events.GetSessionsEvent
-	0,  // 3: events.Node.type:type_name -> events.EventType
-	3,  // 4: events.Node.auth_event:type_name -> events.Authentication
-	5,  // 5: events.Node.slug_event_response:type_name -> events.SlugChangeEventResponse
-	7,  // 6: events.Node.get_sessions_event:type_name -> events.GetSessionsResponse
-	8,  // 7: events.GetSessionsResponse.details:type_name -> events.Detail
-	9,  // 8: events.Detail.started_at:type_name -> google.protobuf.Timestamp
-	2,  // 9: events.EventService.Subscribe:input_type -> events.Node
-	1,  // 10: events.EventService.Subscribe:output_type -> events.Events
-	10, // [10:11] is the sub-list for method output_type
-	9,  // [9:10] is the sub-list for method input_type
-	9,  // [9:9] is the sub-list for extension type_name
-	9,  // [9:9] is the sub-list for extension extendee
-	0,  // [0:9] is the sub-list for field type_name
+	5,  // 1: events.Events.slug_event:type_name -> events.SlugChangeEvent
+	7,  // 2: events.Events.get_sessions_event:type_name -> events.GetSessionsEvent
+	10, // 3: events.Events.terminate_session_event:type_name -> events.TerminateSessionEvent
+	0,  // 4: events.Node.type:type_name -> events.EventType
+	4,  // 5: events.Node.auth_event:type_name -> events.Authentication
+	6,  // 6: events.Node.slug_event_response:type_name -> events.SlugChangeEventResponse
+	8,  // 7: events.Node.get_sessions_event:type_name -> events.GetSessionsResponse
+	11, // 8: events.Node.terminate_session_event_response:type_name -> events.TerminateSessionEventResponse
+	9,  // 9: events.GetSessionsResponse.details:type_name -> events.Detail
+	12, // 10: events.Detail.started_at:type_name -> google.protobuf.Timestamp
+	1,  // 11: events.TerminateSessionEvent.tunnelType:type_name -> events.TunnelType
+	3,  // 12: events.EventService.Subscribe:input_type -> events.Node
+	2,  // 13: events.EventService.Subscribe:output_type -> events.Events
+	13, // [13:14] is the sub-list for method output_type
+	12, // [12:13] is the sub-list for method input_type
+	12, // [12:12] is the sub-list for extension type_name
+	12, // [12:12] is the sub-list for extension extendee
+	0,  // [0:12] is the sub-list for field type_name
 }
 
 func init() { file_events_proto_init() }
@@ -709,19 +928,21 @@ func file_events_proto_init() {
 	file_events_proto_msgTypes[0].OneofWrappers = []any{
 		(*Events_SlugEvent)(nil),
 		(*Events_GetSessionsEvent)(nil),
+		(*Events_TerminateSessionEvent)(nil),
 	}
 	file_events_proto_msgTypes[1].OneofWrappers = []any{
 		(*Node_AuthEvent)(nil),
 		(*Node_SlugEventResponse)(nil),
 		(*Node_GetSessionsEvent)(nil),
+		(*Node_TerminateSessionEventResponse)(nil),
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_events_proto_rawDesc), len(file_events_proto_rawDesc)),
-			NumEnums:      1,
-			NumMessages:   8,
+			NumEnums:      2,
+			NumMessages:   10,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
